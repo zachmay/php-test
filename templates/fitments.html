@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Vehicle Fitments{% endblock %}
+
+{% block content %}
+<form id="fitmentsForm" class="form-horizontal">
+    <div class="form-group">
+        <label for="yearSelector" class="form-label col-sm-1">Year:</label>
+        <div class="col-sm-5">
+            <select
+                id="yearSelector"
+                name="year"
+                class="form-control">
+                <option value=""></option>
+                {% for year in availableYears %}
+                    <option value="{{ year }}" {% if year == selectedYear %}selected{% endif %}>{{ year }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="makeSelector" class="form-label col-sm-1">Make:</label>
+        <div class="col-sm-5">
+            <select
+                id="makeSelector"
+                name="make"
+                class="form-control"
+                {% if availableMakes is empty %}disabled {% endif %}>
+                <option value=""></option>
+                {% for make in availableMakes %}
+                <option value="{{ make }}" {% if make == selectedMake %}selected{% endif %}>{{ make }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="modelSelector" class="form-label col-sm-1">Model:</label>
+        <div class="col-sm-5">
+            <select
+                id="modelSelector"
+                name="model"
+                class="form-control"
+                {% if availableModels is empty %}disabled {% endif %}>
+                <option value=""></option>
+                {% for model in availableModels %}
+                    <option value="{{ model }}" {% if model == selectedModel %}selected{% endif %}>{{ model }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="optionSelector" class="form-label col-sm-1">Option:</label>
+        <div class="col-sm-5">
+            <select
+                id="optionSelector"
+                name="option"
+                class="form-control"
+                {% if availableOptions is empty %}disabled {% endif %}>
+                <option value=""></option>
+                {% for option in availableOptions %}
+                    <option value="{{ option }}" {% if option == selectedOption %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</form>
+
+{% if error %}
+    <div class="well">
+        <p><strong>Error:</strong> {{ error }}</p>
+    </div>
+{% elseif standardFitment %}
+    <div class="well">
+        <p>
+            Standard tire size information for a <strong>{{ selectedYear }} {{ selectedMake }}
+            {{ selectedModel }} {{ selectedOption }}</strong> is:
+        </p>
+        <table class="table">
+            <tr>
+                <td class="col-sm-3">Section Width:</td>
+                <td><strong>{{ standardFitment.getSectionWidth() }}</strong></td>
+            </tr>
+            <tr>
+                <td class="col-sm-3">Aspect Ratio:</td>
+                <td><strong>{{ standardFitment.getAspectRatio() }}</strong></td>
+            </tr>
+            <tr>
+                <td class="col-sm-3">Rim:</td>
+                <td><strong>{{ standardFitment.getRimSize() }}</strong></td>
+            </tr>
+        </table>
+        {% if standardFitment.getNotes() %}
+            <table class="table">
+                <tr>
+                    <td class="col-sm-3">Notes:</td>
+                    <td>{{ standardFitment.getNotes() }}</td>
+                </tr>
+            </table>
+        {% endif %}
+    </div>
+{% endif %}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var form = $('#fitmentsForm');
+        $('#yearSelector').change(function() {
+            form.submit();
+        });
+        $('#makeSelector').change(function() {
+            form.submit();
+        });
+        $('#modelSelector').change(function() {
+            form.submit();
+        });
+        $('#optionSelector').change(function() {
+            form.submit();
+        });
+    });
+</script>
+
+{% endblock %}
